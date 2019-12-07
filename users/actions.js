@@ -1,5 +1,7 @@
 const connection = require('../database');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 createUserQuery = (name, surname, email, age, pass) => {
     const query = 'INSERT INTO users (Name, Surname, Email, Age, Password) VALUES (?, ?, ?, ?, ?)';
@@ -29,36 +31,36 @@ createUser = async (req, res, next) => {
     }
 };
 
-// getUserByEmailQuery = (email) => {
-//     const query = 'SELECT * FROM users WHERE Email = ?';
-//     return new Promise((resolve, reject) => {
-//         connection.query(query, [email], (error, results, fields) => {
-//             if (error) {
-//                 reject(error);
-//             } else {
-//                 resolve(results);
-//             }
-//         });
-//     });
-// };
+getUserByEmailQuery = (email) => {
+    const query = 'SELECT * FROM users WHERE Email = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [email], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
 
-// loginUser = async (req, res) => {
-//     const email = req.body.Email;
-//     const pass = req.body.Password;
-//     try {
-//         var user = await getUserByEmailQuery(email);
-//         var dbUser = user[0];
-//         const matchPass = bcrypt.compareSync(pass, dbUser.Password);
-//         if (matchPass) {
-//             const token = jwt.sign({ dbUser }, 'abcd', { expiresIn: '1h' });
-//             res.status(200).send(token);
-//         } else {
-//             res.status(401).send('wrong pass');
-//         }
-//     } catch (error) {
-//         res.status(500).send(error.message);
-//     }
-// }; 
+loginUser = async (req, res) => {
+    const email = req.body.Email;
+    const pass = req.body.Password;
+    try {
+        var user = await getUserByEmailQuery(email);
+        var dbUser = user[0];
+        const matchPass = bcrypt.compareSync(pass, dbUser.Password);
+        if (matchPass) {
+            const token = jwt.sign({ dbUser }, 'abcd', { expiresIn: '1h' });
+            res.status(200).send(token);
+        } else {
+            res.status(401).send('wrong pass');
+        }
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}; 
 
 getAllUsersQuery = () => {
     const query = 'SELECT * FROM users';
@@ -84,5 +86,6 @@ getAllUsers = async (req, res) => {
 
 module.exports = {
     createUser,
+    loginUser, 
     getAllUsers
 };

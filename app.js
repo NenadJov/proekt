@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const appRouter = require('./router');
 const middleware = require('./middlewares/common');
 require('dotenv/config');
+const jwt = require('express-jwt');
 
 const app = express();
 
@@ -10,6 +11,9 @@ app.use(middleware.logger);
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+const publicRoutes = ['/login'];  //ovie dve se komentiraat koga ne treba da se koristi token!!!
+app.use(jwt({secret: 'abcd'}).unless({path: publicRoutes}));
 
 app.use(appRouter);
 
