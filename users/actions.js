@@ -84,8 +84,37 @@ getAllUsers = async (req, res) => {
     }
 };
 
+updateUserQuery = (id, user) => {
+    const query = 'UPDATE users SET Name = ?, Surname = ?, Email = ?, Age = ?, Password = ? WHERE Id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [user.Name, user.Surname, user.Email, user.Age, user.Password, id], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                console.log(results.affectedRows);
+                if (results.affectedRows == 0) {
+                    reject('nema user so takvo Id')
+                } else {
+                    resolve(results);
+                }
+            }
+        });
+    });
+};
+
+updateUser = async (req, res, next) => {
+    const user = req.body;
+    const id = req.params.id;
+    try {
+        const users = await updateUserQuery(id, user);
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
 module.exports = {
     createUser,
     loginUser, 
-    getAllUsers
+    getAllUsers,
+    updateUser
 };
