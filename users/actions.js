@@ -91,12 +91,12 @@ updateUserQuery = (id, user) => {
             if (error) {
                 reject(error);
             } else {
-                console.log(results.affectedRows);
+                // console.log(results);
                 if (results.affectedRows == 0) {
                     reject('nema user so takvo Id')
-                } else {
-                    resolve(results);
                 }
+                    resolve(results);
+                
             }
         });
     });
@@ -112,9 +112,34 @@ updateUser = async (req, res, next) => {
         res.status(500).send(error.message);
     }
 };
+
+deleteUserQuery = (userId) => {
+    const query = 'DELETE FROM users WHERE Id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [userId], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+deleteUser = async (req, res, next) => {
+    var userId = req.params.id;
+    try {
+        const users = await deleteUserQuery(userId)
+        res.status(200).send("Deleted user with id = " + userId);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 module.exports = {
     createUser,
     loginUser, 
     getAllUsers,
-    updateUser
+    updateUser,
+    deleteUser
 };

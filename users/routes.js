@@ -7,5 +7,6 @@ routes.get('/users', actions.getAllUsers);
 routes.post('/users', actions.createUser);
 routes.post('/login', actions.loginUser);
 routes.put('/users/:id', actions.updateUser);
+routes.delete('/users/:id', actions.deleteUser);
 
 module.exports = routes; 
