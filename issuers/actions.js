@@ -46,7 +46,57 @@ createIssuer = async(req, res) => {
     }
 };
 
+updateBuyVolumeQuery = (id, user) => {
+    const query = 'update issuers set Volume = Volume - ? where id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [user.Volume, id], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results); 
+            }
+        });
+    });
+};
+
+updateBuyVolume = async (req, res, next) => {
+    const user = req.body;
+    const id = req.params.id;
+    try {
+        const users = await updateBuyVolumeQuery(id, user);
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+updateSellVolumeQuery = (id, user) => {
+    const query = 'update issuers set Volume = Volume + ? where id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [user.Volume, id], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results); 
+            }
+        });
+    });
+};
+
+updateSellVolume = async (req, res, next) => {
+    const user = req.body;
+    const id = req.params.id;
+    try {
+        const users = await updateSellVolumeQuery(id, user);
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 module.exports = {
     getAllIssuers,
-    createIssuer
+    createIssuer,
+    updateBuyVolume,
+    updateSellVolume
 }

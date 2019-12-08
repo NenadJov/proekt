@@ -48,7 +48,7 @@ getAllUsers = async (req, res) => {
     }
 };
 
-updateCashQuery = (id, user) => {
+updateBuyWithdrawCashQuery = (id, user) => {
     const query = 'update portfolio set cash = cash - ? where usersId = ?';
     return new Promise((resolve, reject) => {
         connection.query(query, [user.Cash, id], (error, results, fields) => {
@@ -61,11 +61,35 @@ updateCashQuery = (id, user) => {
     });
 };
 
-updateCash = async (req, res, next) => {
+updateBuyWithdrawCash = async (req, res, next) => {
     const user = req.body;
     const id = req.params.id;
     try {
-        const users = await updateCashQuery(id, user);
+        const users = await updateBuyWithdrawCashQuery(id, user);
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+updateSellCashQuery = (id, user) => {
+    const query = 'update portfolio set cash = cash + ? where usersId = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [user.Cash, id], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results); 
+            }
+        });
+    });
+};
+
+updateSellCash = async (req, res, next) => {
+    const user = req.body;
+    const id = req.params.id;
+    try {
+        const users = await updateSellCashQuery(id, user);
         res.status(200).send(users);
     } catch (error) {
         res.status(500).send(error.message);
@@ -75,5 +99,6 @@ updateCash = async (req, res, next) => {
 module.exports = {
     createPortfolio,
     getAllUsers,
-    updateCash
+    updateBuyWithdrawCash,
+    updateSellCash
 }
