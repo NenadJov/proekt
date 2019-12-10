@@ -49,7 +49,9 @@ getAllUsersWithPortfolio = async (req, res) => {
 };
 
 getSpecificUserWithPortfolioQuery = (userId) => {
-    const query = 'select u.Id, u.Name, u.Surname, p.Cash, i.Name, t.Price, t.Quantity, t.TransactionTypeId from users as u left join portfolio as p on u.id = p.UsersId join transaction as t on t.PortfolioId = p.Id join issuers as i on t.IssuersId = i.Id where u.Id = ?';
+    const query = `select u.Id, u.Name, u.Surname, p.Cash, i.Name, t.Price, t.Quantity, t.TransactionTypeId 
+                    from users as u left join portfolio as p on u.id = p.UsersId join transaction as t on t.PortfolioId = p.Id 
+                    join issuers as i on t.IssuersId = i.Id where u.Id = ?`;
     return new Promise((resolve, reject) => {
         connection.query(query, [userId], (error, results, fields) => {
             if (error) {
