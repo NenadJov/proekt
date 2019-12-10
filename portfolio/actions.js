@@ -48,6 +48,34 @@ getAllUsersWithPortfolio = async (req, res) => {
     }
 };
 
+getSpecificUserWithPortfolioQuery = (userId) => {
+    const query = 'select u.Id, u.Name, u.Surname, p.Cash, i.Name, t.Price, t.Quantity, t.TransactionTypeId from users as u left join portfolio as p on u.id = p.UsersId join transaction as t on t.PortfolioId = p.Id join issuers as i on t.IssuersId = i.Id where u.Id = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [userId], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+getSpecificUserWithPortfolio = async (req, res, next) => {
+    const userId = req.params.id;
+    if (userId <= 0) {
+        var error = new Error("id can not be less than 1 !!!");
+        error.status = 403;
+        next(error);
+    } 
+    try {
+        const user = await getSpecificUserWithPortfolioQuery(userId);
+        res.status(200).send(user[0]);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 updateBuyOrWithdrawCashQuery = (id, user) => {
     const query = 'update portfolio set cash = cash - ? where usersId = ?';
     return new Promise((resolve, reject) => {
@@ -99,6 +127,7 @@ updateSellCash = async (req, res, next) => {
 module.exports = {
     createPortfolio,
     getAllUsersWithPortfolio,
+    getSpecificUserWithPortfolio,
     updateBuyOrWithdrawCash,
     updateSellCash
 }

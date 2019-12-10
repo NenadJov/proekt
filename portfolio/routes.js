@@ -5,6 +5,7 @@ const routes = express.Router();
 
 routes.post('/portfolio/:usersId', actions.createPortfolio);
 routes.get('/portfolio', actions.getAllUsersWithPortfolio);
+routes.get('/portfolio/:id', actions.getSpecificUserWithPortfolio);
 routes.put('/portfolio/:id', actions.updateBuyOrWithdrawCash);
 routes.put('/portfolio/:id', actions.updateSellCash);
 
