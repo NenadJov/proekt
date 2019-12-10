@@ -95,8 +95,7 @@ updateUserQuery = (id, user) => {
                 if (results.affectedRows == 0) {
                     reject('nema user so takvo Id')
                 }
-                    resolve(results);
-                
+                resolve(results);  
             }
         });
     });
