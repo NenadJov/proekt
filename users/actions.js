@@ -52,7 +52,7 @@ loginUser = async (req, res) => {
         var dbUser = user[0];
         const matchPass = bcrypt.compareSync(pass, dbUser.Password);
         if (matchPass) {
-            const token = jwt.sign({ dbUser }, 'abcd', { expiresIn: '1h' });
+            const token = jwt.sign({ dbUser }, 'abcd', { expiresIn: '1y' });
             res.status(200).send(token);
         } else {
             res.status(401).send('wrong pass');
