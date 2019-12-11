@@ -82,7 +82,7 @@ getAllUsers = async (req, res) => {
             if(err){
                 res.status(403).send('token not valid');
             } else {
-                res.status(200).send(/*users*/authData);
+                res.status(200).send(users/*authData*/);
             }
         });
     } catch (error) {
