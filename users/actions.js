@@ -78,7 +78,13 @@ getAllUsersQuery = () => {
 getAllUsers = async (req, res) => {
     try {
         const users = await getAllUsersQuery();
-        res.status(200).send(users);
+        jwt.verify(req.token, 'abcd', (err, authData) =>{
+            if(err){
+                res.status(403).send('token not valid');
+            } else {
+                res.status(200).send(/*users*/authData);
+            }
+        });
     } catch (error) {
         res.status(500).send(error.message);
     }

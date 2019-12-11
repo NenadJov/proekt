@@ -99,4 +99,4 @@ module.exports = {
     createIssuer,
     updateBuyVolume,
     updateSellVolume
-}
+};
