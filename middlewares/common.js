@@ -19,8 +19,16 @@ errHandler = (err, req, res, next) => {
     res.status(err.status).json(errorObject);
 };
 
+joiHandler = (err, req, res, next) => {
+    if(err.joi) {
+        res.status(400).json({error: error.joi.message});
+    }
+    res.status(500).send(err);
+};
+
 module.exports = {
     logger,
     errRoute,
-    errHandler
+    errHandler,
+    joiHandler
 };  
