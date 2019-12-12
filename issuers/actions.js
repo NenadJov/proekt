@@ -22,6 +22,30 @@ getAllIssuers = async (req, res) => {
     }
 };
 
+countAllIssuersByTypeQuery = () => {
+    const query = `SELECT IssuerType.type, count(issuers.issuertypeid) AS NumberOfSecurities FROM issuers
+                    JOIN issuertype ON issuertype.Id = issuers.issuertypeId
+                    GROUP BY type`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, (error, results, fields) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
+countAllIssuersByType = async (req, res) => {
+    try {
+        const users = await countAllIssuersByTypeQuery();
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 createIssuerQuery = (issuerTypeId, post) => {
     const query = 'INSERT INTO issuers (Name, Exchange, LastPrice, Volume, IssuerTypeId) VALUES (?, ?, ?, ?,?)';
     return new Promise((resolve, reject) => {
@@ -97,6 +121,7 @@ updateSellVolume = async (req, res, next) => {
 module.exports = {
     getAllIssuers,
     createIssuer,
+    countAllIssuersByType,
     updateBuyVolume,
     updateSellVolume
 };

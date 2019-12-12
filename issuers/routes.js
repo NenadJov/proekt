@@ -14,6 +14,7 @@ const issuerSchema = {
 const routes = express.Router();
 
 routes.get('/issuers', actions.getAllIssuers);
+routes.get('/issuers', actions.countAllIssuersByType);
 routes.post('/issuers/:issuerTypeId', celebrate(issuerSchema), actions.createIssuer);
 routes.put('/issuers/:id', actions.updateBuyVolume);
 routes.put('/issuers/:id', actions.updateSellVolume);
