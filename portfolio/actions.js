@@ -1,10 +1,11 @@
 const connection = require('../database');
 
 
-createPortfolioQuery = (cash, /*createdOn,*/ usersId) => {
-    const query = 'INSERT INTO portfolio (cash, createdOn, usersId) VALUES (?, now(), ?)';
+createPortfolioQuery = (cash, Id) => {
+    // const query = 'INSERT INTO portfolio (cash, createdOn, usersId) VALUES (?, now(), ?)';
+    const query = 'update portfolio set cash = ?, createdOn = now() where usersId = ?'
     return new Promise((resolve, reject) => {
-        connection.query(query, [cash, /*createdOn,*/ usersId], (error, results, fields) => {
+        connection.query(query, [cash, Id], (error, results, fields) => {
             if (error) {
                 reject(error);
             } else {
@@ -16,10 +17,11 @@ createPortfolioQuery = (cash, /*createdOn,*/ usersId) => {
 
 createPortfolio = async (req, res, next) => {
     const portCash = req.body.Cash;
-    // const portCreatedOn = req.body.CreatedOn;
-    const portUsersId = req.params.Id;
+    console.log(portCash);
+    const Id = req.params.id;
+    console.log(Id);
     try {
-        const portfolio = await createUserQuery(portCash, /*portCreatedOn,*/ portUsersId);
+        const portfolio = await createUserQuery(portCash, Id);
         res.status(200).send(portfolio);
     } catch (error) {
         res.status(500).send(error.message);
