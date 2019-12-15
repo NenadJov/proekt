@@ -19,7 +19,6 @@ app.use(appRouter);
 
 app.use(middleware.errRoute);
 app.use(middleware.errHandler);
-app.use(middleware.joiHandler);
 
 const PORT = process.env.PORT || 5000;
 
