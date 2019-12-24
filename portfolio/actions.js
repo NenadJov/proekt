@@ -2,8 +2,8 @@ const connection = require('../database');
 
 
 createPortfolioQuery = (cash, Id) => {
-    // const query = 'INSERT INTO portfolio (cash, createdOn, usersId) VALUES (?, now(), ?)';
-    const query = 'update portfolio set cash = ?, createdOn = now() where usersId = ?'
+    const query = 'INSERT INTO portfolio (cash, createdOn, usersId) VALUES (?, ?, ?)';
+    // const query = 'update portfolio set cash = ?, createdOn = ? where usersId = ?'
     return new Promise((resolve, reject) => {
         connection.query(query, [cash, Id], (error, results, fields) => {
             if (error) {
